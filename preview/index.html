@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview - RUBEN COTON HTML</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+    .toolbar {
+      background: #16213e;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #cc0000;
+    }
+    .toolbar h1 { font-size: 18px; color: #fff; }
+    .toolbar select {
+      padding: 8px 12px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background: #0f3460;
+      color: #fff;
+      font-size: 14px;
+    }
+    .preview-frame {
+      max-width: 640px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    iframe {
+      width: 100%;
+      height: 700px;
+      border: none;
+    }
+    .footer-info {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <h1>RUBEN COTON — Email Preview</h1>
+    <select id="templateSelect" onchange="loadTemplate()">
+      <option value="../templates/base.html">base.html</option>
+    </select>
+  </div>
+
+  <div class="preview-frame">
+    <iframe id="previewFrame" src="../templates/base.html"></iframe>
+  </div>
+
+  <div class="footer-info">
+    Abrir este archivo en el navegador para previsualizar plantillas.
+  </div>
+
+  <script>
+    function loadTemplate() {
+      var select = document.getElementById('templateSelect');
+      document.getElementById('previewFrame').src = select.value;
+    }
+  </script>
+
+</body>
+</html>
