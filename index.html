@@ -1370,12 +1370,12 @@
     };
 
     async function llamarOllama(prompt) {
-      // ⚡ RACE: Ollama + Gemini en paralelo. Gemini con delay de 8s para priorizar Ollama si va rápido.
-      // Si Ollama responde en <8s gana. Si tarda más, Gemini suele responder en 3-5s y rescata.
+      // ⚡ RACE Ollama + Gemini. En VPS (no localhost) → solo backend cascade (sin race).
+      var EN_LOCAL = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
       var ctlOllama = new AbortController();
       var ctlGemini = new AbortController();
 
-      var ollamaP = (async () => {
+      var ollamaP = EN_LOCAL ? (async () => {
         var to = setTimeout(() => ctlOllama.abort(), 90000);
         try {
           var resp = await fetch(OLLAMA_URL, {
@@ -1391,19 +1391,25 @@
           if (!data || typeof data.response !== 'string' || data.response.length < 50) throw new Error('Ollama vacío');
           return { source: 'ollama', text: data.response };
         } catch (e) { clearTimeout(to); throw e; }
-      })();
+      })() : Promise.reject(new Error('Ollama solo en local'));
 
       var geminiP = (async () => {
-        await new Promise(r => setTimeout(r, 8000));  // delay 8s — solo entra si Ollama es lento
+        // En local: delay 8s para priorizar Ollama. En VPS: 0s, va directo.
+        if (EN_LOCAL) await new Promise(r => setTimeout(r, 8000));
         if (ctlGemini.signal.aborted) throw new Error('cancelled');
-        var rcas = await fetch('/api/llm-cascade', {
-          method: 'POST', headers: {'Content-Type':'application/json'}, signal: ctlGemini.signal,
-          body: JSON.stringify({ prompt: prompt, schema: LLM_SCHEMA, skipOllama: true })
-        });
-        if (!rcas.ok) throw new Error('Gemini HTTP ' + rcas.status);
-        var dcas = await rcas.json();
-        if (!dcas.ok || !dcas.json) throw new Error('Gemini fail');
-        return { source: dcas.source, text: JSON.stringify(dcas.json) };
+        // Timeout local del fetch a backend (150s para acompañar timeout backend Gemini de 120s)
+        var fetchTo = setTimeout(() => ctlGemini.abort(), 150000);
+        try {
+          var rcas = await fetch('/api/llm-cascade', {
+            method: 'POST', headers: {'Content-Type':'application/json'}, signal: ctlGemini.signal,
+            body: JSON.stringify({ prompt: prompt, schema: LLM_SCHEMA, skipOllama: true })
+          });
+          clearTimeout(fetchTo);
+          if (!rcas.ok) throw new Error('Backend HTTP ' + rcas.status);
+          var dcas = await rcas.json();
+          if (!dcas.ok || !dcas.json) throw new Error(dcas.error || 'IA backend sin respuesta');
+          return { source: dcas.source, text: JSON.stringify(dcas.json) };
+        } catch (e) { clearTimeout(fetchTo); throw e; }
       })();
 
       try {
