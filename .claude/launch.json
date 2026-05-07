@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "email-builder",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "C:/Users/elrub/Desktop/CARPETA CODEX/01_PROYECTOS/RUBEN-COTON_HTML", "-p", "8090", "-c-1"],
+      "port": 8090
+    }
+  ]
+}

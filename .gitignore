@@ -9,3 +9,26 @@ Thumbs.db
 
 # Temp
 *.tmp
+
+# Secrets — NUNCA subir
+.env
+.env.local
+.env.production
+token.json
+credentials.json
+client_secret*.json
+
+# Logs
+*.log
+server.log
+server.err.log
+
+# Outputs / cache
+tests/outputs/
+cache/
+preview/
+node_modules/
+
+# Python
+__pycache__/
+*.pyc

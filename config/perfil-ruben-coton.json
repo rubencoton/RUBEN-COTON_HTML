@@ -1,0 +1,521 @@
+{
+  "_meta": {
+    "version": "2.0",
+    "ultima_actualizacion": "2026-05-06",
+    "fuente_unica_de_verdad": true,
+    "descripcion": "Base de conocimiento canónica de RUBEN COTON. Resultado de fusión exhaustiva de 14 fuentes en CARPETA CODEX + memoria del usuario. Cualquier dato fuera de aquí debe considerarse inventado y se filtra automáticamente.",
+    "fuentes_consultadas": [
+      "RUBEN-COTON_HTML/config/perfil-ruben-coton.json (v1)",
+      "RUBEN-COTON_YOUTUBE/context/artist-profile.json",
+      "RUBEN-COTON_YOUTUBE/context/seo-context.json",
+      "RUBEN-COTON_YOUTUBE/context/rrss.txt",
+      "RUBEN-COTON_YOUTUBE/context/description-patterns.json",
+      "RUBEN-COTON_VIDEO/src/brand_context.py",
+      "IA-RUBEN-COTON/docs/PROMPT_MAESTRO_IA_RUBEN_COTON.txt",
+      "hoja-webapp-1RLQUTL0/PROMPT_IA_RUBEN_COTON_ENTRENAMIENTO.txt",
+      ".claude/projects/.../memory/user_identity.md",
+      ".claude/projects/.../memory/user_brand.md",
+      ".claude/projects/.../memory/user_contacto.md",
+      ".claude/projects/.../memory/user_profile_dj.md",
+      ".claude/projects/.../memory/user_rrss_stats.md",
+      ".claude/projects/.../memory/user_galones_actualizados.md"
+    ]
+  },
+
+  "_contradicciones_resueltas": [
+    { "campo": "residencia", "decision": "Coslada (Madrid)", "razon": "Memoria usuario explícita 2026-03. Valencia es residencia DJ mensual, no domicilio." },
+    { "campo": "fin_real_madrid", "decision": "marzo 2026", "razon": "Confirmado por usuario. seo-context decía febrero 2026 (obsoleto)." },
+    { "campo": "experiencia_total", "decision": "más de 15 años", "razon": "Regla inviolable del usuario. seo-context decía +20 años (no usar)." },
+    { "campo": "cifras_seguidores", "decision": "PROHIBIDAS", "razon": "Usuario marcó 'me chirría'. Aunque seo-context tenga 43K IG, etc., NO usar en emails." },
+    { "campo": "naranja_oficial", "decision": "#ff6600", "razon": "user_brand.md y user_galones_actualizados.md. seo-context decía #FF6B00 (obsoleto)." },
+    { "campo": "genero_principal", "decision": "TWENTY", "razon": "Único género propio. EDM/techno son herramientas. Usuario fue explícito 2026-05." }
+  ],
+
+  "identidad": {
+    "nombre_artistico": "RUBEN COTON",
+    "ortografia_obligatoria": "MAYÚSCULAS, sin tildes, una T (NUNCA Rubén, Cotón, Cotton)",
+    "nombre_civil": "Rubén Jiménez González",
+    "uso_nombre_civil": "NO usar en emails comerciales, solo en docs legales o cuando lo pida el destinatario",
+    "fecha_nacimiento": "25 de noviembre de 1993",
+    "edad": 32,
+    "lugar_nacimiento": "Madrid, España",
+    "raices_familiares": ["Pelahustán (Toledo)", "El Real de San Vicente (Toledo)"],
+    "residencia_actual": "Coslada (Madrid)",
+    "marca_registrada": true,
+    "valores_personales": ["constancia", "amor", "tranquilidad"],
+    "auto_definicion": "DJ / Arquitecto Sonoro"
+  },
+
+  "formacion": {
+    "titulos": ["Arquitecto Técnico", "ADE (Administración y Dirección de Empresas)"],
+    "vision_dual": "Combina creatividad artística con gestión empresarial. Por eso también lleva ARTES BUHO MANAGEMENT."
+  },
+
+  "contacto": {
+    "email_principal": "manager@rubencoton.com",
+    "email_personal_no_publico": "rubencoton@gmail.com",
+    "uso_email_personal": "NO publicar en emails comerciales — usar manager@",
+    "whatsapp": "+34 613 009 336",
+    "telefono": "+34 613 009 336",
+    "web": "https://rubencoton.com",
+    "web_estado": "⚠️ CADUCADA en Squarespace (websiteId 678f4b35b9e3222872022b90). NO mencionar como referencia en emails hasta renovar dominio/hosting.",
+    "web_archive_disponible": false,
+    "calendar_videollamada": "https://calendar.app.google/YmCv8YUWQXt7omEs6"
+  },
+
+  "redes_sociales": {
+    "_fuente_canonica": "C:/Users/elrub/Desktop/RRSS.txt (proporcionado por el usuario 2026-05-06). URLs con www y trailing slash según su preferencia.",
+    "instagram": { "handle": "@rubencoton", "url": "https://www.instagram.com/rubencoton/", "estado": "activo" },
+    "tiktok": { "handle": "@rubencoton", "url": "https://www.tiktok.com/@rubencoton", "estado": "activo" },
+    "youtube": {
+      "handle": "@rubencoton",
+      "url": "https://www.youtube.com/@rubencoton",
+      "channel_id": "UCqf78UyOWhWMS14n8BJ6Vww",
+      "playlists": {
+        "sesiones_completas": {
+          "id": "PLD__IvI0ALgzV7vgQNb546qEsjLzQMtz5",
+          "url": "https://www.youtube.com/playlist?list=PLD__IvI0ALgzV7vgQNb546qEsjLzQMtz5",
+          "descripcion": "Sesiones DJ COMPLETAS (largas, 1h-4h). Para clientes que quieran escuchar sets enteros.",
+          "uso_email": "Programadores festival, agencias, salas premium, podcast/radio. Cuando piden 'una referencia larga' o 'set completo'.",
+          "label_sugerido": "ESCUCHAR SESIONES COMPLETAS →"
+        },
+        "videos_promocionales_cortos": {
+          "id": "PLD__IvI0ALgxFFRsEi-NBqVy51ANIQjbG",
+          "url": "https://www.youtube.com/playlist?list=PLD__IvI0ALgxFFRsEi-NBqVy51ANIQjbG",
+          "descripcion": "Vídeos promocionales CORTOS (<1 min). Cápsulas con highlights de sesiones reales.",
+          "uso_email": "Concejales festejos, wedding planners, agencias eventos, marcas/sponsors. Cuando NO van a escuchar 1h pero sí 60 segundos. Es el formato más comercial.",
+          "label_sugerido": "VER VÍDEOS PROMO (1 min) →"
+        }
+      }
+    },
+    "facebook": { "handle": "@rubencotonOficial", "url": "https://www.facebook.com/rubencotonOficial/", "estado": "activo" },
+    "x_twitter": { "handle": "@rubencoton", "url": "https://x.com/rubencoton", "estado": "inactivo" },
+    "threads": { "handle": "@rubencoton", "url": "https://www.threads.com/@rubencoton", "estado": "activo" },
+    "pinterest": { "handle": "rubencoton", "url": "https://es.pinterest.com/rubencoton/", "estado": "activo" },
+    "soundcloud": { "handle": "rubencoton", "url": "https://soundcloud.com/rubencoton", "estado": "activo (NO en RRSS.txt — confirmar si se conserva)", "_aviso": "NO aparece en RRSS.txt del usuario. Tiene 2 sesiones publicadas (Navidad 2025, Reyes 2026 en Palau Alameda). Pendiente de confirmación." },
+    "web_oficial": { "url": "https://rubencoton.com/", "estado": "⚠️ CADUCADA — Squarespace expirado" },
+    "hashtag_identitario": "#SoyRUBENCOTON",
+    "hashtags_secundarios": ["#RUBENCOTON", "#Mashup", "#DJ"],
+    "regla_cifras": "PROHIBIDO mencionar números de seguidores/views/streams. Usar términos cualitativos: 'comunidad fiel', 'gran alcance digital'."
+  },
+
+  "carpeta_promotores": {
+    "_descripcion": "Carpeta oficial Drive que se comparte con promotores. Contenido oficial verificado. SE PUEDE incluir cualquier enlace en emails comerciales.",
+    "carpeta_raiz": {
+      "id": "1RLLG0n08oeRf6SjiF6prIFx5UKMho4sX",
+      "url": "https://drive.google.com/drive/folders/1RLLG0n08oeRf6SjiF6prIFx5UKMho4sX?usp=sharing",
+      "label_corto": "Material para promotores (Drive)"
+    },
+    "subcarpetas": {
+      "audios_sesiones_completas": {
+        "id": "1Gqg0DJSR64CPXl2SZbBA_ahb6n-gK6zb",
+        "url": "https://drive.google.com/drive/folders/1Gqg0DJSR64CPXl2SZbBA_ahb6n-gK6zb?usp=sharing",
+        "descripcion": "26 sesiones DJ completas en .wav calidad estudio (300MB-5GB cada una). DESCARGABLES.",
+        "uso_email": "Para clientes que quieran DESCARGAR las sesiones completas. Diferente a YouTube (que es streaming).",
+        "label_sugerido": "DESCARGAR SESIONES COMPLETAS →",
+        "diferencia_con_youtube": "YouTube playlist = streaming online. Drive folder = descarga directa de los .wav."
+      },
+      "videos_sesiones_completas": {
+        "id": "1XOzEnutipgTe4sJk_JLMV8CjDPjtK50X",
+        "url": "https://drive.google.com/drive/folders/1XOzEnutipgTe4sJk_JLMV8CjDPjtK50X"
+      },
+      "logos": {
+        "id": "1HdVCiC-3in4L9DR2g74IKThj6tfXEkxZ",
+        "url": "https://drive.google.com/drive/folders/1HdVCiC-3in4L9DR2g74IKThj6tfXEkxZ",
+        "uso_email": "Para prensa/medios que necesiten logos oficiales"
+      },
+      "biografia": {
+        "id": "1P_Ap8COLl4ZNqSjl56ObnBJqe8842ZQN",
+        "url": "https://drive.google.com/drive/folders/1P_Ap8COLl4ZNqSjl56ObnBJqe8842ZQN"
+      },
+      "press_kit": {
+        "id": "1O-T1jyPBtlKTesrO43-ENVzE-P1yUnVa",
+        "url": "https://drive.google.com/drive/folders/1O-T1jyPBtlKTesrO43-ENVzE-P1yUnVa"
+      },
+      "visuales_vj": {
+        "id": "1_O3qeYlllFyNxW3OB3GxGvmde28x27Ih",
+        "url": "https://drive.google.com/drive/folders/1_O3qeYlllFyNxW3OB3GxGvmde28x27Ih",
+        "descripcion": "Visuales VJ oficiales versión 2026 (mp4) para acompañar sets en directo",
+        "uso_email": "Para festivales/clubes que pregunten por VJ"
+      },
+      "videos_promocionales": {
+        "id": "1GKAX0JA9cIa0os2DI7b4zTV_hyVL35lR",
+        "url": "https://drive.google.com/drive/folders/1GKAX0JA9cIa0os2DI7b4zTV_hyVL35lR",
+        "descripcion": "11 vídeos promocionales con cortes de eventos reales (Villaconejos, Soto del Real, Aldovea, Villablino, Seseña, Chinchón, Colmenar, Churrymember Fest)",
+        "uso_email": "Para wedding planners, concejales, agencias que quieran ver formato corto"
+      },
+      "fotos_set_dj": {
+        "id": "1YJTtCMhTJWROqHnkJBBpOJnmBOUv-zPA",
+        "url": "https://drive.google.com/drive/folders/1YJTtCMhTJWROqHnkJBBpOJnmBOUv-zPA"
+      },
+      "fotos_estudio": {
+        "id": "15aFriSGryyRAsCZg-ydnMxUHOLilB6CI",
+        "url": "https://drive.google.com/drive/folders/15aFriSGryyRAsCZg-ydnMxUHOLilB6CI"
+      }
+    },
+    "videos_promocionales_directos": [
+      { "evento": "Villaconejos 28-07-2023", "id": "1LnRfmif5BcvCxesaP9YElqFR8J3960wY" },
+      { "evento": "Soto del Real 04-08-2024", "id": "1Lihgi77M596ozs6dcwxgPlSYuQdzDVKG" },
+      { "evento": "Soto del Real 06-08-2023", "id": "1LhqOGPJoaxesAHkb16p3w8WxHRgAMfTs" },
+      { "evento": "Soto del Real 07-10-2023", "id": "1Lj6JIz76XUF9kZ5SCNjFzEzY-CTGlzsh" },
+      { "evento": "Seseña 17-08-2024", "id": "1LhOEGKLxe6GuCabqLWQycn3cH9uAvQx7" },
+      { "evento": "Villablino I 15-08-2023", "id": "1LkSq8JTEZJMH3KpEXv4egPWCIk-9I6hK" },
+      { "evento": "Villablino II 15-08-2023", "id": "1Lk-NGtVUSmzHYad8Kq_nFbXIgO3ff3KH" },
+      { "evento": "Chinchón 12-08-2024", "id": "1Lg4qgrVv9X8yY8X1jVCMTKnYX2gIfssO" },
+      { "evento": "Palacio de Aldovea (Torrejón de Ardoz) 29-07-2023", "id": "1LgSY5TSohYBwd6u9GV0R8p9bNgHzPXwb" },
+      { "evento": "Colmenar de Oreja 07-09-2023", "id": "1dCyQNaaDYYb8pNfQrgRX2iA57MaT7BEP" },
+      { "evento": "Churrymember Fest (Miguelturra, Ciudad Real) 05-04-2025", "id": "1_IU4N9WFJikM2KKBJTUkXQJr3ySlGG9w" }
+    ],
+    "logos_oficiales": [
+      { "nombre": "LOGO_RUBENCOTON_NEG_2L_RGB.png", "id": "1N-udXvcS3QhbIS31vF5tWqnVPFJRL7C2", "uso": "Header email (ya en uso)" },
+      { "nombre": "LOGO_RUBENCOTON_POS_2L_RGB.png", "id": "1A5CbI_2xkj7FAWamdmD3SqhB_KHqZ-9p", "uso": "Sobre fondo claro" },
+      { "nombre": "LOGO_RUBENCOTON_NEG_1L_RGB.png", "id": "1egxlQIQHqVRTNsZPsfjAtIuItfgOn9Ai", "uso": "Versión horizontal sobre fondo oscuro" },
+      { "nombre": "LOGO_RUBENCOTON_POS_1L_RGB.png", "id": "1aD4akWPKF5OmJE2Z06SkSrWTM35ob22u", "uso": "Versión horizontal sobre fondo claro" },
+      { "nombre": "LOGO_RUBENCOTON_NEG_RRSS.png", "id": "1FWUFkIPEYQcN-NS-a34ME1jtYsPtL3Xw", "uso": "Avatar redes sociales" }
+    ],
+    "biografia_documento_editable": {
+      "docx_id": "1wpnlH88JuAQqY9Xcvt5ogMXQHxsZDbes",
+      "url": "https://docs.google.com/document/d/1wpnlH88JuAQqY9Xcvt5ogMXQHxsZDbes/edit?usp=drivesdk"
+    }
+  },
+
+  "sesiones_documentadas_completas_drive": {
+    "_descripcion": "26 sesiones DJ guardadas en Drive como evidencia de trayectoria. Todas en .wav de calidad estudio.",
+    "_uso_email": "Cuando un cliente pida 'referencias' o 'ejemplo de set', enviar enlace a la carpeta o a un audio concreto.",
+    "lista": [
+      { "fecha": "2026-03-14", "venue": "Palau Alameda - Sala After You (Valencia)", "id": "1XZKMLphY0iNzhwEFppPaATriHi-OK3jg", "tipo": "residencia mensual" },
+      { "fecha": "2026-02-28", "venue": "Palau Alameda - Sala After You (Valencia)", "id": "1AIcOZKEzLJzBe9ZYG9nKQoqEgPgatQWq", "tipo": "residencia mensual" },
+      { "fecha": "2026-01-03", "venue": "Palau Alameda - Sala After You (Valencia)", "id": "1RvZapW6z4ACEA0o0evqOAC0hTp-VXsq9", "tipo": "residencia mensual" },
+      { "fecha": "2025-12-20", "venue": "Palau Alameda - Sala After You (Valencia)", "id": "1sADPd8TJl8NeHv1wQ3JtTrYTK23BrBXt", "tipo": "residencia mensual" },
+      { "fecha": "2025-12-06", "venue": "Palau Alameda - Sala After You (Valencia)", "id": "1zEQwBcZq8X6HLBB2NdIbCa7icDzLGv8J", "tipo": "residencia mensual" },
+      { "fecha": "2025-10-25", "venue": "Palau Alameda - Sala After You (Valencia)", "id": "1C2EZfzkvyZn4tUTbJiD_vaHwVhu1nXrH", "tipo": "residencia mensual" },
+      { "fecha": "2025-10-11", "venue": "Palau Alameda - After You ANIVERSARIO 9 (Valencia)", "id": "17tzEd_jzpfUEJWON407xScx4cYcNWrlm", "tipo": "evento especial" },
+      { "fecha": "2025-09-27", "venue": "Palau Alameda - Sala After You (Valencia)", "id": "1jjZfVc2uAbeH144xqrC2pndLdr7ve7VL", "tipo": "residencia mensual" },
+      { "fecha": "2025-09-14", "venue": "Campo Real (Madrid)", "id": "1EoierLGrafLNOp0IGlmMZl8ztd5AdT3E", "tipo": "patronales" },
+      { "fecha": "2025-09-12", "venue": "Navalcarnero (Madrid)", "id": "1AlIWDwqDaEFQ7VoxvqpQAF2HoNtK5tFL", "tipo": "patronales" },
+      { "fecha": "2025-08-23", "venue": "Alfaz del Pi - Albir (Alicante)", "id": "1NG-POyioN4nUdSBY3YlLFqK8hXcR0KJQ", "tipo": "evento" },
+      { "fecha": "2025-08-08", "venue": "Chercoles (Soria)", "id": "1RVXHBDN-DpOK76SSmNvC9b6bUjU0F1vv", "tipo": "patronales" },
+      { "fecha": "2025-08-04", "venue": "Soto del Real (Madrid)", "id": "1NOMmWHKD1t_jBERcuM7cWnBREa-ng7Cg", "tipo": "patronales" },
+      { "fecha": "2025-07-21", "venue": "Madrid (Sesión 01)", "id": "10BjKJZ9LEI78PYsPNPF1NYygGCy0WpbI", "tipo": "sesión" },
+      { "fecha": "2025-07-21", "venue": "Madrid (Sesión 02)", "id": "16bs2uJ9brm6re24u_IOtJmK4QJ8aGFr8", "tipo": "sesión" },
+      { "fecha": "2025-07-21", "venue": "Madrid (Sesión 03)", "id": "1wub0U7MdCkmKTUxiWx5Xt7vTs2-r6HEZ", "tipo": "sesión" },
+      { "fecha": "2025-07-16", "venue": "Madrid (Sesión 00)", "id": "1WgnhqYfDlMq5MtGFP693lfKftKLKJGQn", "tipo": "sesión" },
+      { "fecha": "2025-04-05", "venue": "Churrymember Fest 2025 - Miguelturra (Ciudad Real)", "id": "1guwCUIvkI0ysiDr41KbWJ9yDLDGHbQLX", "tipo": "festival" },
+      { "fecha": "2024-08-17", "venue": "Seseña (Madrid/Toledo)", "id": "1G38DhWw9SPeXoOGrtq1Ccm8XmvbfVfbW", "tipo": "patronales" },
+      { "fecha": "2024-08-13", "venue": "Roa de Duero (Burgos)", "id": "18GLJSf4tL-ph9cQYEIvXga_VXEnmjnEj", "tipo": "patronales" },
+      { "fecha": "2024-08-12", "venue": "Chinchón (Madrid)", "id": "1CKUS3gFob4-uWAgznrV6CSND0Q0-EbHj", "tipo": "patronales" },
+      { "fecha": "2024-08-04", "venue": "Soto del Real (Madrid)", "id": "1L79TPXOkkmsSSLKYmNo0GytTmWGY7YNU", "tipo": "patronales" },
+      { "fecha": "2023-10-07", "venue": "Soto del Real (Madrid)", "id": "12sjqgMXDLXDjdFYGZO1zTIqVe-SgPmVY", "tipo": "patronales" },
+      { "fecha": "2023-09-07", "venue": "Colmenar de Oreja (Madrid)", "id": "1cCDEeZFreFA5GGMzLM3PkdErQFeQcLzt", "tipo": "patronales" },
+      { "fecha": "2023-08-15", "venue": "Villablino (León)", "id": "14JPbFf0yUeuW1sM4ZSybyvOHWGsVNj5J", "tipo": "patronales" },
+      { "fecha": "2023-08-06", "venue": "Soto del Real (Madrid)", "id": "1ZQpEtziqpkeA6CeWXy_bV2sI3BDYrh2_", "tipo": "patronales" },
+      { "fecha": "2023-07-28", "venue": "Villaconejos (Madrid)", "id": "1eX1DPCSugSesuic9gTYmJfDf8dtm3mrB", "tipo": "patronales" }
+    ]
+  },
+
+  "documentos_disponibles": {
+    "biografia_pdf": {
+      "drive_id": "1bCfaJyqbX-Ofv0ur2cla2vKVaxActu97",
+      "url_publica": "https://drive.google.com/file/d/1bCfaJyqbX-Ofv0ur2cla2vKVaxActu97/view?usp=sharing",
+      "nombre_archivo": "RUBEN COTON - BIOGRAFIA (2026).pdf",
+      "como_se_menciona_en_email": "mi biografía"
+    },
+    "press_kit_pdf": {
+      "drive_id": "1tuM7AYVZgN3vEB3X8TpwkzitoscLqtZt",
+      "url_publica": "https://drive.google.com/file/d/1tuM7AYVZgN3vEB3X8TpwkzitoscLqtZt/view?usp=sharing",
+      "nombre_archivo": "RUBEN COTON - PRESS KIT (2026).pdf",
+      "como_se_menciona_en_email": "mi press kit"
+    }
+  },
+
+  "genero_musical": {
+    "principal": "TWENTY",
+    "definicion_oficial": "Género propio creado por RUBEN COTON. Coger la música que TODOS conocemos de toda la vida (Cadena Dial, Los 40, Cadena 100, hits que sonaban en la radio) y mezclarla sobre BASES ELECTRÓNICAS para que suene actual, viral y bailable.",
+    "regla_estricta": "NO es 'EDM al uso'. NUNCA decir 'soy DJ de EDM/electrónica/techno'. Decir 'soy DJ de TWENTY'. EDM/techno/hardstyle son SOLO HERRAMIENTAS de producción.",
+    "frase_oficial": "Hago TWENTY: cojo la música que todos hemos bailado siempre y la pongo sobre base electrónica actual.",
+    "herramientas_de_produccion": ["techno", "EDM", "tech house", "hardstyle", "house progresivo", "indie", "latino", "comercial", "pop"],
+    "adaptabilidad": "ME ADAPTO al perfil del evento. Si el público es chill, voy chill. Si es patronal, voy comercial-energético. Si es club, voy más electrónico. Tras reunión previa o escuchando referencias del cliente, ajusto el set.",
+    "influencias_publicas": ["Miss Monique", "Afterlife"],
+    "off_stage_relax": "House Progresivo, Techno Melódico"
+  },
+
+  "trayectoria": {
+    "experiencia_total": "más de 15 años",
+    "regla_experiencia": "Decir SIEMPRE 'más de 15 años'. NUNCA decir +20 años, ni 5 años, ni cifras concretas de eventos.",
+
+    "hito_presente": {
+      "titulo": "DJ residente en Palau Alameda (Valencia) — fiesta After You",
+      "_aclaracion_critica": "La SALA/VENUE se llama PALAU ALAMEDA. La FIESTA mensual que se celebra dentro se llama AFTER YOU. NUNCA decir 'Sala After You' (After You no es una sala, es el nombre de la fiesta). Decir: 'Palau Alameda (Valencia)' o 'la fiesta After You en Palau Alameda' o 'Palau Alameda donde organizan la fiesta After You'.",
+      "ubicacion": "Valencia",
+      "frecuencia": "mensual (cada mes desde 2024)",
+      "estado": "ACTIVO",
+      "descripcion": "Sesión mensual con lleno completo en Palau Alameda (Valencia), fiesta After You.",
+      "evidencia_audiovisual": "Especial Navidad 2025 grabado en directo (1h20m), Sesión Reyes 2026 publicada en SoundCloud"
+    },
+
+    "hito_pasado_real_madrid": {
+      "titulo": "DJ oficial del Real Madrid Baloncesto",
+      "duracion": "6 temporadas consecutivas",
+      "venue": "Movistar Arena (antes WiZink Center), Madrid",
+      "competiciones": ["Euroliga", "ACB"],
+      "fin": "marzo 2026",
+      "estado": "FINALIZADO — SIEMPRE en pasado",
+      "regla_inviolable": "NUNCA decir 'soy DJ del Real Madrid' ni 'actualmente Real Madrid'. SIEMPRE 'fui', 'animé', 'durante 6 temporadas', 'hasta marzo 2026'.",
+      "regla_movistar_arena": "El Movistar Arena SOLO se menciona ligado al Real Madrid Baloncesto en pasado. NO es residencia, NO es sala donde pinche actualmente."
+    },
+
+    "festivales_reales": [
+      { "nombre": "Mad Cool", "ubicacion": "Madrid" },
+      { "nombre": "Churrymember Fest 2025", "ubicacion": "Miguelturra (Ciudad Real)", "fecha": "5 abril 2025", "evidencia": "audio sesión completa + video promocional + sesión documentada en YouTube" }
+    ],
+    "regla_festivales": "SOLO Mad Cool y Churrymember Fest están verificados. NO inventar Sonar, Sonorama, FIB, Primavera Sound, Arenal Sound, Viña Rock, Dreambeach, Medusa, Tomorrowland, Lollapalooza, etc.",
+
+    "reconocimiento_mediatico": {
+      "medio": "Cadena Dial",
+      "que_paso": "Cadena Dial dedicó cobertura a mashups de fans de La Oreja de Van Gogh, incluido el mío",
+      "url_articulo_oficial": "https://www.cadenadial.com/2023/asi-transforman-fans-la-oreja-de-van-gogh-exitos-mientras-esperan-nueva-musica-339776.html",
+      "titulo_articulo": "Así transforman fans La Oreja de Van Gogh éxitos mientras esperan nueva música",
+      "fecha": "2023",
+      "uso": "RECALCAR siempre. Cuando se mencione 'Cadena Dial' en el cuerpo, el sistema lo convierte automáticamente en enlace clicable al artículo oficial. Es la prueba más concreta de reconocimiento mediático."
+    },
+
+    "patronales_pinchadas": [
+      "Coslada (Madrid)",
+      "Chinchón (Madrid)",
+      "Soto del Real (Madrid)",
+      "Villablino (León)",
+      "Colmenar de Oreja (Madrid)",
+      "Roa de Duero (Burgos)",
+      "Villaconejos (Madrid)",
+      "Pelahustán (Toledo, pueblo natal)",
+      "El Real de San Vicente (Toledo, raíces)",
+      "Seseña (Toledo)",
+      "Torrejón de Ardoz (Madrid, además de Palacio de Aldovea)",
+      "Chercoles (Soria)",
+      "Campo Real (Madrid)",
+      "Navalcarnero (Madrid)",
+      "Alfaz del Pi - Albir (Alicante)",
+      "Miguelturra (Ciudad Real, vía Churrymember Fest)"
+    ],
+    "patronales_evidencia_fotografica": {
+      "Soto del Real": "77 fotos en catálogo",
+      "Villaconejos": "62 fotos en catálogo",
+      "Seseña": "23 fotos en catálogo",
+      "Chinchón": "16 fotos en catálogo",
+      "Colmenar de Oreja": "14 fotos en catálogo",
+      "Palau Alameda Valencia": "12 fotos en catálogo",
+      "Torrejón": "fotos documentadas (Palacio Aldovea)",
+      "Valdeluz": "evidencia foto + sesión 2023"
+    },
+    "actividad_anual_documentada": {
+      "2021": "3 fotos en directo",
+      "2022": "1 foto en directo",
+      "2023": "254 fotos (año más activo, incluye Aldovea Torrejón, Soto del Real, Villablino, Valdeluz)",
+      "2024": "71 fotos (Soto del Real 2024, Chinchón 2024, Palau Alameda residencia)",
+      "2025": "65 fotos (Palau Alameda Reyes, AfterYou 18-ene-2025)",
+      "2026": "21 fotos (sesiones recientes Palau Alameda)"
+    },
+
+    "anecdota_villaconejos": {
+      "version_canonica": "Un fan saltó la seguridad para abrazarme en mitad del set en Villaconejos.",
+      "uso": "Demuestra el nivel de pasión del público. Usar en emails a concejales/festejos."
+    },
+
+    "venues_premium_verificados": [
+      "Palau Alameda (Valencia, residente mensual con la fiesta After You) — SALA",
+      "Movistar Arena / antes WiZink Center (Madrid, Real Madrid Baloncesto, etapa cerrada marzo 2026) — RECINTO DEPORTIVO",
+      "Palacio de Aldovea (Torrejón de Ardoz) — FINCA DE BODAS (NO es sala, NO es club, NO es venue de DJ — es finca para BODAS premium)"
+    ],
+    "_palacio_aldovea_aclaracion": "Palacio de Aldovea es una FINCA DE BODAS Y EVENTOS PRIVADOS. NUNCA decir 'sala Palacio de Aldovea' ni 'club Aldovea' ni listarlo entre 'salas emblemáticas'. Solo mencionar en contexto BODAS/EVENTOS PRIVADOS PREMIUM. Para Concejalía/Ayuntamiento NO mencionar (irrelevante).",
+    "_valdeluz_aclaracion": "Valdeluz NO es una sala ni festival. Es una urbanización donde he pinchado en eventos privados/bodas. Solo mencionar en contexto bodas/eventos privados zona, NUNCA listarla como 'venue' o 'sala' o 'festival'.",
+
+    "artistas_compartido_escenario": ["Abel Ramos", "DJ Neil", "Sofía Cristo", "Dani BPM", "DJ Marta", "Mago de Oz", "OBK"],
+    "regla_artistas": "SOLO estos 4 son verificados. NO inventar colaboraciones con Guetta, Tiesto, Calvin Harris, Bizarrap, Quevedo, Rosalía, Bad Bunny, Karol G, Deadmau5, etc.",
+    "regla_no_mashups_juntos": "Los 4 artistas son colegas con quien ha COMPARTIDO ESCENARIO. NO ha hecho mashups en estudio con ellos. NUNCA decir 'mashup de Abel Ramos con DJ Neil' o similar.",
+
+    "mashups_virales_documentados": [
+      "Eminem vs AC/DC",
+      "Village People vs Sean Paul",
+      "La Oreja de Van Gogh + Arde Bogotá (reconocido en Cadena Dial)",
+      "ABBA + La Oreja de Van Gogh",
+      "C. Tangana + You",
+      "Bad Gyal + Evanescence",
+      "Mónica Naranjo en rave",
+      "La Cintura VS Solo",
+      "Una Noche vs El Fary",
+      "Una Noche En Madrid vs El Fary (Apatrullando La Ciudad)",
+      "Romper La Disco vs Egoísta",
+      "Spandau Ballet (True) vs Britney Spears (Toxic)",
+      "Lady Gaga (Bad Romance) vs OBK (Historias De La Radio)",
+      "Pump It Up vs Kiss",
+      "Amaral vs Barricada"
+    ],
+
+    "videos_largos_documentados_youtube": [
+      "Especial Navidad 2025 en directo Palau Alameda (1h20m)",
+      "RUBEN COTON @ Palacio de Aldovea Torrejón 2023",
+      "RUBEN COTON @ Soto del Real Madrid 2023",
+      "RUBEN COTON @ Soto del Real II Madrid 2023",
+      "RUBEN COTON @ Villablino León 2023 (1/2)",
+      "RUBEN COTON @ Villablino León 2023 (2/2)",
+      "RUBEN COTON en SOTO DEL REAL 2024",
+      "RUBEN COTON en Chinchón 2024",
+      "RUBEN COTON en Villaconejos: Fiesta de Pueblo (3h47m)",
+      "RUBEN COTON en festival con Churrymember",
+      "RUBEN COTON en boda / fiesta privada",
+      "REMIXES EXPLOSIVOS Y MASHUPS EN VIVO (2h21m)"
+    ],
+    "sesiones_palau_alameda_fechadas": [
+      "22 junio 2024 (Gran Sala AfterYou)",
+      "18 enero 2025 (AfterYou Gran Sala)",
+      "Especial Navidad 2025 (en directo, grabado)",
+      "Sesión Reyes 2026 (publicada SoundCloud)",
+      "22 marzo 2025 (sesión iOS documentada)"
+    ],
+    "colaboradores_documentados": [
+      {
+        "nombre": "Churrymember",
+        "contexto": "Festival — vídeo en YouTube oficial",
+        "verificacion": "Aparece en VIDEOS_PLAYLIST de la app",
+        "uso": "Mencionar SOLO si destinatario es festival/youtuber/colaboración digital"
+      }
+    ]
+  },
+
+  "actividad_actual": {
+    "residencia_mensual": "Palau Alameda (Valencia)",
+    "bodas_premium": "Palacio de Aldovea (Torrejón)",
+    "mentor_djs": "ha formado y guiado a multitud de aspirantes",
+    "empresa_propia": {
+      "nombre": "ARTES BUHO MANAGEMENT",
+      "email": "booking@artesbuhomanagement.com",
+      "actividad": "booking y representación de artistas",
+      "rol_de_RUBEN_COTON": "fundador / cara visible / programador"
+    },
+    "faceta_2026": "RUBEN COTON ya no es solo DJ: también empresario gracias a su formación ADE. Gestiona booking, representación y programa eventos."
+  },
+
+  "rider_tecnico": {
+    "equipo_principal": ["Pioneer XDJ-RX3", "Pioneer DJM-900NXS2", "Pioneer DJ CDJs", "Ableton Live", "Rekordbox"],
+    "diferenciador_unico": "Uso de Inteligencia Artificial para crear mashups en tiempo real durante el show. Nadie más hace eso."
+  },
+
+  "marca_visual": {
+    "colores_corporativos": {
+      "principal": "naranja #ff6600",
+      "secundario": "negro #000000",
+      "terciario": "blanco #ffffff",
+      "obsoleto_NO_usar": ["#FF6B00 (variante incorrecta de seo-context)", "rojo+amarillo (paleta antigua de ARTES BUHO, no de RUBEN COTON)"]
+    },
+    "tono_de_marca": "energético, sensual, narrativo. Frases cortas con carga emocional. Primera persona. Seguro y cercano, no agresivo."
+  },
+
+  "hobbies_personales": {
+    "deportes": ["Crossfit", "Deportes de contacto", "Alpinismo amateur", "Senderismo", "Escalada"],
+    "uso_comercial": "Útil para sponsors deportivos, marcas lifestyle, ropa deportiva, eventos wellness."
+  },
+
+  "historia_humanizadora": {
+    "inicio_infancia": "Empezó con un software de mezclas regalo de cereales y una mesa de mezclas de juguete (Reyes Magos).",
+    "primera_mesa_pro": "Verano 2010: trabajó como camarero para comprar su primera mesa profesional.",
+    "pelahustan_2008": "En 2008 salvó las fiestas patronales de Pelahustán como voluntario.",
+    "el_real_san_vicente": "Triunfó en las fiestas de quintos de El Real de San Vicente con una controladora de juguete.",
+    "uso": "USAR SOLO con prensa, podcast, colaboraciones, presentar marca. NO con concejales/wedding planners."
+  },
+
+  "frases_oficiales_marca": [
+    "Hago TWENTY: cojo la música que todos hemos bailado siempre y la pongo sobre base electrónica actual.",
+    "No soy un DJ más. Soy un arquitecto sonoro que transforma eventos en experiencias que la gente recuerda años después.",
+    "Mi público viaja en el tiempo mientras baila.",
+    "DJ profesional Madrid - Residente Palau Alameda Valencia - Mad Cool - Bodas y eventos - Reconocido por Cadena Dial",
+    "Mashup creativo... DJ profesional para bodas y eventos en Madrid y Valencia",
+    "Cuando los ritmos pegadizos de X se fusionan con la potencia de Y...",
+    "Dale al play y cuéntame qué te parece.",
+    "Dos mundos, una mezcla. ¿Qué te parece?",
+    "Cuando el mashup tiene más sentido del que esperabas"
+  ],
+
+  "hashtags_publicacion": {
+    "principales": ["#SoyRUBENCOTON", "#RUBENCOTON", "#Mashup", "#MashUp", "#DJ"],
+    "secundarios": [
+      "#MashupMagico", "#MixMasLoco", "#DJLife", "#PalauAlameda",
+      "#MusicaElectronica", "#DJSet", "#Madrid", "#Mezcla",
+      "#DJBoda", "#DJBodaMadrid", "#DJBodaValencia",
+      "#DJEvento", "#DJProfesional", "#Reels", "#fyp", "#parati", "#viral"
+    ]
+  },
+
+  "canales_origen_leads_documentados": [
+    "Instagram", "Facebook", "Contactos directos", "Zankyou (portal bodas)",
+    "Mailing", "TikTok", "Web rubencoton.com"
+  ],
+
+  "perfil_publico_estimado": {
+    "_fuente": "Análisis interno proyecto RUBEN-COTON_VIDEO",
+    "_uso": "NO mencionar cifras concretas en emails. Sirve para adaptar tono según destinatario.",
+    "segmentos": [
+      { "nombre": "Clubbers ES 18-30", "redes": "IG/TikTok", "uso_email": "Sponsors juveniles, marcas lifestyle" },
+      { "nombre": "Profesionales 30-55", "redes": "Facebook", "uso_email": "Wedding planners, agencias premium" },
+      { "nombre": "Fans Palau Alameda", "redes": "todas", "uso_email": "Salas, clubs noche" },
+      { "nombre": "Clubbing Madrid tech house", "redes": "IG", "uso_email": "Salas Madrid, festivales electrónica" },
+      { "nombre": "Pueblos/patronales (peak jun-sep)", "redes": "Facebook/local", "uso_email": "Concejales festejos" },
+      { "nombre": "Industria DJ colegas", "redes": "X (inactivo)", "uso_email": "Colaboraciones, booking" },
+      { "nombre": "Crossfit/deporte", "redes": "IG/TikTok", "uso_email": "Sponsors deportivos, marcas wellness" }
+    ]
+  },
+
+  "cifras_permitidas": [
+    "más de 15 años",
+    "6 temporadas (Real Madrid)",
+    "desde 2024 (Palau Alameda)",
+    "cada mes (residencia)",
+    "marzo 2026 (fin Real Madrid)"
+  ],
+
+  "cifras_prohibidas": {
+    "regla": "PROHIBIDO mencionar números específicos de asistentes, aforos, seguidores, views, streams, fans, eventos.",
+    "ejemplos_a_NUNCA_decir": [
+      "30.000 personas", "10.000 asistentes", "43.000 seguidores",
+      "16,2 millones de views", "1.000 eventos", "miles de fans",
+      "cientos de asistentes", "+20 años", "+1000 eventos", "75.2K followers"
+    ],
+    "alternativa_cualitativa": [
+      "miles de personas", "público masivo", "lleno completo", "multitud",
+      "gran audiencia", "cientos de eventos", "comunidad fiel", "gran trayectoria",
+      "gran alcance digital"
+    ]
+  },
+
+  "_archivos_otros_proyectos_a_actualizar_si_quieres_consistencia": [
+    {
+      "archivo": "01_PROYECTOS/RUBEN-COTON_YOUTUBE/context/artist-profile.json",
+      "cambios": [
+        "base: 'Valencia' → 'Coslada (residencia) / Valencia (residencia DJ)'",
+        "note_real_madrid: 'febrero 2026' → 'marzo 2026'",
+        "brand_colors.naranja: '#FF6B00' → '#ff6600'",
+        "Añadir 'TWENTY' como género principal"
+      ]
+    },
+    {
+      "archivo": "01_PROYECTOS/RUBEN-COTON_YOUTUBE/context/seo-context.json",
+      "cambios": [
+        "bio_short: '+20 años' → 'más de 15 años', quitar '+1000 eventos'",
+        "bio_medium: quitar cifras de seguidores y views",
+        "USP: 'hasta feb 2026' → 'hasta marzo 2026'"
+      ]
+    },
+    {
+      "archivo": "01_PROYECTOS/RUBEN-COTON_VIDEO/src/brand_context.py",
+      "cambios": [
+        "Añadir TWENTY como género principal",
+        "Real Madrid: cerrar etapa con 'hasta marzo 2026' explícito"
+      ]
+    },
+    {
+      "archivo": "01_PROYECTOS/hoja-webapp-1RLQUTL0/PROMPT_IA_RUBEN_COTON_ENTRENAMIENTO.txt",
+      "cambios": [
+        "Paleta corporativa: rojo/amarillo (es de ARTES BUHO) → naranja #ff6600 / negro / blanco (correcto de RUBEN COTON)"
+      ]
+    }
+  ]
+}

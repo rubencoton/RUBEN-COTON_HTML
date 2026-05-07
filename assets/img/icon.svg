@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+  </defs>
+  <!-- Fondo -->
+  <rect width="512" height="512" rx="80" fill="url(#bg)"/>
+  <!-- Sobre de email -->
+  <g transform="translate(256,220)">
+    <!-- Cuerpo del sobre -->
+    <rect x="-140" y="-60" width="280" height="160" rx="12" fill="#222" stroke="#ff6600" stroke-width="4"/>
+    <!-- Solapa superior -->
+    <path d="M-140,-60 L0,40 L140,-60" fill="none" stroke="#ff6600" stroke-width="4" stroke-linejoin="round"/>
+    <!-- Lineas de texto -->
+    <rect x="-80" y="20" width="100" height="6" rx="3" fill="#444"/>
+    <rect x="-80" y="36" width="70" height="6" rx="3" fill="#444"/>
+    <!-- Destello AI -->
+    <g transform="translate(70,-10)">
+      <circle cx="0" cy="0" r="28" fill="#ff6600" opacity="0.9"/>
+      <text x="0" y="6" text-anchor="middle" font-family="Arial" font-weight="800" font-size="20" fill="#fff">AI</text>
+    </g>
+  </g>
+  <!-- Texto RUBEN COTON -->
+  <text x="256" y="400" text-anchor="middle" font-family="Arial" font-weight="900" font-size="42" fill="#ffffff" letter-spacing="4">RUBEN COTON</text>
+  <!-- Subtexto -->
+  <text x="256" y="430" text-anchor="middle" font-family="Arial" font-weight="600" font-size="16" fill="#ff6600" letter-spacing="2">EMAIL BUILDER</text>
+  <!-- Chispa AI arriba derecha -->
+  <g transform="translate(390,80)">
+    <path d="M0,-18 L4,-4 L18,0 L4,4 L0,18 L-4,4 L-18,0 L-4,-4 Z" fill="#ff6600" opacity="0.7"/>
+  </g>
+  <g transform="translate(120,90)">
+    <path d="M0,-10 L2,-2 L10,0 L2,2 L0,10 L-2,2 L-10,0 L-2,-2 Z" fill="#ff6600" opacity="0.4"/>
+  </g>
+</svg>

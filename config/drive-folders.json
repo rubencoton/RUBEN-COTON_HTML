@@ -1,0 +1,30 @@
+{
+  "fotos": {
+    "directo": {
+      "nombre": "Fotos DJ en directo",
+      "descripcion": "Fotos de RUBEN COTON pinchando en vivo en eventos",
+      "folder_id": "1YJTtCMhTJWROqHnkJBBpOJnmBOUv-zPA",
+      "url": "https://drive.google.com/drive/folders/1YJTtCMhTJWROqHnkJBBpOJnmBOUv-zPA"
+    },
+    "estudio": {
+      "nombre": "Fotos de estudio profesionales",
+      "descripcion": "Sesion de fotos profesional con fotografo en estudio",
+      "folder_id": "15aFriSGryyRAsCZg-ydnMxUHOLilB6CI",
+      "url": "https://drive.google.com/drive/folders/15aFriSGryyRAsCZg-ydnMxUHOLilB6CI"
+    }
+  },
+  "logos": {
+    "carpeta": {
+      "nombre": "Logos RUBEN COTON",
+      "folder_id": "1HdVCiC-3in4L9DR2g74IKThj6tfXEkxZ",
+      "url": "https://drive.google.com/drive/folders/1HdVCiC-3in4L9DR2g74IKThj6tfXEkxZ"
+    }
+  },
+  "contactos": {
+    "carpeta": {
+      "nombre": "Contactos de campanas",
+      "folder_id": "1A7agk072QZIS_6HVB3SmX8j2pERh4fW3",
+      "url": "https://drive.google.com/drive/folders/1A7agk072QZIS_6HVB3SmX8j2pERh4fW3"
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "_meta": {
+    "ultima_actualizacion": "2026-05-05",
+    "descripcion": "Listas centralizadas de elementos permitidos y prohibidos. Frontend e tests deben leer de aquí."
+  },
+
+  "venues_whitelist": [
+    "Palau Alameda",
+    "Movistar Arena",
+    "WiZink Center",
+    "Palacio de Aldovea",
+    "Mad Cool"
+  ],
+  "_aclaraciones_venues": {
+    "after_you": "After You es el NOMBRE DE LA FIESTA mensual que se celebra dentro de Palau Alameda. NO es una sala. Decir 'Palau Alameda' o 'la fiesta After You en Palau Alameda'. NUNCA 'Sala After You'.",
+    "valdeluz": "Valdeluz es una urbanización donde se han realizado bodas privadas. NO es venue / sala / festival. Solo mencionar en contexto bodas privadas en zona, NO listar como referencia profesional."
+  },
+
+  "venues_blacklist": [
+    "Sala Apolo", "Apolo", "Razzmatazz", "Pacha", "Florida 135", "Fabrik", "Kapital",
+    "Fabric", "Berghain", "Sonar", "Sonorama", "Sonorama Ribera",
+    "FIB", "Festival de Benicassim", "Primavera Sound", "Arenal Sound",
+    "Viña Rock", "Vina Rock", "Dreambeach", "Medusa Festival", "Medusa",
+    "Lollapalooza", "Tomorrowland", "Ushuaia", "Amnesia",
+    "Auditorio Municipal", "Auditorio Nacional", "Polideportivo Municipal",
+    "Plaza Mayor", "Las Ventas", "Bernabeu", "Camp Nou",
+    "Teatro Coliseum", "Coliseum", "Sotavento", "Sala Blanca",
+    "Club Luna", "Sala Luna", "Sala Estrella", "Club Estrella",
+    "Sala Olimpo", "Sala Riviera", "Sala Caracol", "Joy Eslava",
+    "Mondo Disko", "But Madrid", "Maravillas Club",
+    "Wololo", "Mama Disco", "Florida Park", "Nox Club", "Lab Club",
+    "Auditorio", "Polideportivo", "Pabellon Municipal", "Recinto Ferial",
+    "Villablanca"
+  ],
+
+  "patronales_whitelist": [
+    "Coslada", "Chinchón", "Soto del Real", "Villablino",
+    "Colmenar de Oreja", "Roa de Duero", "Villaconejos",
+    "Pelahustán", "El Real de San Vicente", "Seseña",
+    "Torrejón", "Torrejón de Ardoz",
+    "Chercoles", "Campo Real", "Navalcarnero",
+    "Alfaz del Pi", "Albir", "Miguelturra"
+  ],
+  "festivales_whitelist": [
+    "Mad Cool",
+    "Churrymember Fest"
+  ],
+
+  "artistas_whitelist": [
+    "Abel Ramos", "DJ Neil", "Sofía Cristo", "Dani BPM",
+    "DJ Marta", "Mago de Oz", "OBK"
+  ],
+
+  "artistas_blacklist": [
+    "David Guetta", "Calvin Harris", "Steve Aoki", "Tiesto", "Hardwell",
+    "Martin Garrix", "Bizarrap", "Quevedo", "Rosalia", "Rosalía",
+    "Bad Bunny", "Karol G", "Skrillex", "Diplo", "Marshmello",
+    "Avicii", "Deadmau5", "deadmau5", "Eric Prydz", "Above & Beyond",
+    "Armin van Buuren", "Paul van Dyk", "Carl Cox"
+  ],
+
+  "spam_words_alta_penalizacion": [
+    "gratis", "100% gratis", "oferta", "urgente", "ultima oportunidad",
+    "última oportunidad", "oferta limitada", "tiempo limitado",
+    "actua ya", "actúa ya", "clic aquí", "compra ahora",
+    "garantizado", "100% garantizado", "ganga", "regalo", "bonus",
+    "gane dinero", "gana dinero", "dinero facil", "dinero fácil",
+    "sin riesgo", "sin obligacion", "sin obligación",
+    "lotto", "loteria", "lotería", "premio", "ha ganado",
+    "viagra", "cialis", "casino", "apuestas", "préstamo",
+    "credito facil", "crédito fácil", "tarjeta de credito",
+    "promocion exclusiva", "promoción exclusiva",
+    "descuento exclusivo", "solo hoy", "felicitaciones", "seleccionado"
+  ],
+
+  "spam_words_media_penalizacion": [
+    "oferta especial", "descuento", "rebaja", "liquidacion", "outlet",
+    "promocion", "promoción", "mejores precios", "precio increible",
+    "no te lo pierdas", "solo por tiempo limitado",
+    "oferta unica", "oferta única", "ahorra dinero", "ahorra ahora",
+    "plazas limitadas", "date prisa", "aprovecha ahora",
+    "no esperes mas", "no esperes más", "ultima llamada", "última llamada"
+  ],
+
+  "cliches_prohibidos": [
+    "te apetece", "imagina tu", "imagina", "ambiente energético",
+    "ambiente energetico", "vibrar al son", "experiencia inolvidable",
+    "hacer realidad esta visión", "hacer realidad esta vision",
+    "energético y participativo", "energetico y participativo",
+    "singularidad cultural", "mejor música", "mejor musica"
+  ],
+
+  "fechas_prohibidas_regex": "\\b(en|el|durante)\\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\\s+(de\\s+)?20\\d{2}\\b",
+  "fechas_vagas_prohibidas_regex": "\\b(el pasado verano|el pasado invierno|el verano pasado|el mes pasado|hace tres semanas|el año pasado|hace unas semanas|el pasado mes|este verano)\\b",
+  "fecha_unica_permitida": "marzo 2026 (cierre etapa Real Madrid)",
+
+  "verbos_tercera_persona_a_borrar": [
+    "RUBEN COTON ha", "RUBEN COTON fue", "RUBEN COTON es",
+    "RUBEN COTON está", "RUBEN COTON estará", "RUBEN COTON estaba",
+    "RUBEN COTON llev", "RUBEN COTON anim", "RUBEN COTON llen",
+    "RUBEN COTON pinch", "RUBEN COTON cautiv", "RUBEN COTON sorprend",
+    "RUBEN COTON conquist", "RUBEN COTON dej", "RUBEN COTON se present",
+    "RUBEN COTON regresa", "RUBEN COTON actuó", "RUBEN COTON ofrece",
+    "RUBEN COTON impulse"
+  ]
+}
