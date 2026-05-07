@@ -1746,8 +1746,25 @@
         '🎯🎯🎯 FORMULA DE ASUNTO OBLIGATORIA — TIPO ' + formulaElegida.id + ' 🎯🎯🎯\n' +
         formulaElegida.desc + '\n' +
         '⚠️ EL ASUNTO DEBE SEGUIR EXACTAMENTE ESTA FORMULA TIPO ' + formulaElegida.id + '. \n' +
-        '⚠️ PROHIBIDO empezar con "¿Sabías que RUBEN COTON...", "¿Conoces...", "¿Te imaginas...", "¿Sabes...", "¿Has visto...", "¿Quieres saber...", "¿Te has perdido...". Estos arranques estan QUEMADOS.\n' +
-        '⚠️ PROHIBIDO empezar con "Propuesta", "RUBEN COTON -", "RUBEN COTON propone", "Hola, soy RUBEN COTON", "RUBEN COTON ha".\n' +
+        '⚠️⚠️⚠️ PROHIBIDO ABSOLUTO en el asunto:\n' +
+        '   ❌ "Propuesta profesional para X"\n' +
+        '   ❌ "RUBEN COTON — Propuesta..."\n' +
+        '   ❌ "Una propuesta DJ"\n' +
+        '   ❌ "Hola, soy RUBEN COTON"\n' +
+        '   ❌ "RUBEN COTON propone..."\n' +
+        '   ❌ "¿Sabías que...", "¿Conoces...", "¿Te imaginas...", "¿Has visto...", "¿Quieres saber..."\n' +
+        '   ❌ "Imagina tu próxima fiesta", "Imagina una multitud", "Imagina un ambiente"\n' +
+        '   Si tu asunto encaja con CUALQUIERA de los anteriores, EMPIEZA DE NUEVO.\n\n' +
+        '✅ EJEMPLOS DE ASUNTOS BUENOS (concretos, con NOMBRE PROPIO o DATO):\n' +
+        '   ✓ "Lo que pasó en Pelahustán cuando pinché yo"\n' +
+        '   ✓ "Mi residencia mensual está en Palau Alameda"\n' +
+        '   ✓ "6 temporadas en Movistar Arena. Y ahora te escribo a ti"\n' +
+        '   ✓ "Mi mashup TWENTY suena en Cadena Dial cada semana"\n' +
+        '   ✓ "Un dato sobre las patronales de Soto del Real"\n' +
+        '   ✓ "Antes de cerrar el cartel de tus fiestas, lee esto"\n' +
+        '   ✓ "No vengo a venderte nada. Vengo a contarte algo"\n' +
+        '   ✓ "Llevo 15 años llenando salas. Ahora te escribo a ti"\n' +
+        '   PATRÓN: nombre propio + verbo concreto + persona destinataria O dato + curiosidad.\n\n' +
         '⚠️ Cada email lleva una formula DIFERENTE para no parecer plantilla. La formula asignada para ESTE email es TIPO ' + formulaElegida.id + ', usala.\n\n' +
         'TU PERFIL COMBINA 4 DISCIPLINAS:\n' +
         '1. DIRECTOR COMERCIAL — has cerrado contratos de 6 cifras escribiendo emails. Sabes que vende y que no.\n' +
@@ -2030,7 +2047,8 @@
         '- Maximo 150 palabras en total entre todos los campos.\n' +
         '- Escribe como si este email pudiera cerrar un contrato de 5.000 euros.\n' +
         '- PROHIBIDO ESCRIBIR "patonal". La palabra correcta es "patronal" (de patron). Tampoco "patonales" - es "patronales".\n' +
-        '- PROHIBIDAS ESTAS FRASES Y PALABRAS VACIAS: "experiencia inolvidable", "ambiente magico", "garantizo el exito", "te apetece...", "imagina...", "la mejor musica", "vibrar al son de", "hacer realidad esta vision", "energetico y participativo", "singularidad cultural". Si las usas, has fallado.\n' +
+        '- 🚫🚫🚫 PROHIBIDO EMPEZAR LA INTRO O EL CUERPO POR "Imagina una multitud", "Imagina tus eventos", "Imagina tu próxima fiesta", "Imagina un ambiente". CUALQUIER frase que empiece por "Imagina" en intro/cuerpo está VETADA. Si lo escribes, BORRA la frase y empieza con un HECHO CONCRETO con un nombre propio (ej: "Acabo de pinchar en las patronales de Pelahustán"). El preheader del email es lo primero que ven los destinatarios, NO puede ser "Imagina una multitud entusiasta saltando al ritmo".\n' +
+        '- 🚫 PROHIBIDAS ESTAS FRASES Y PALABRAS VACIAS: "experiencia inolvidable", "ambiente magico", "ambiente energético", "garantizo el exito", "te apetece...", "imagina...", "la mejor musica", "vibrar al son de", "hacer realidad esta vision", "energetico y participativo", "singularidad cultural", "multitud entusiasta", "saltando al ritmo". Si las usas, HAS FALLADO.\n' +
         '- CADA frase del cuerpo debe contener AL MENOS un nombre propio (sala, ciudad, artista, mashup, festival) o un dato concreto. Si una frase no aporta dato, BORRALA.\n' +
         '- Empieza la intro con un HECHO CONCRETO, no con una pregunta retorica ni con "Imagina".\n' +
         '- El asunto NO puede empezar con "Propuesta" ni "RUBEN COTON -". Tiene que ser una frase que despierte curiosidad real.';
@@ -2799,11 +2817,47 @@
         textos.cuerpo = sanitizar(textos.cuerpo || '');
         textos.cta = sanitizar(textos.cta || '');
 
-        // Validar campos vacios
-        if (!textos.asunto || textos.asunto.length < 5) textos.asunto = 'RUBEN COTON — Propuesta profesional para ' + sanitizar(audiencia);
-        if (!textos.intro || textos.intro.length < 10) textos.intro = 'Soy RUBEN COTON. Fui DJ oficial del Real Madrid de Baloncesto durante 6 temporadas y actualmente soy residente en Palau Alameda, Valencia.';
-        if (!textos.cuerpo || textos.cuerpo.length < 20) textos.cuerpo = 'He animado fiestas patronales en municipios como Soto del Real, Coslada, Chinchón y Villablino, compartiendo escenario con artistas como Abel Ramos y Sofía Cristo. Mi versatilidad musical y mis mashups virales me han convertido en una referencia del sector.';
-        if (!textos.cta || textos.cta.length < 5) textos.cta = 'Me encantaría hablar con usted sobre cómo puedo hacer de sus fiestas una experiencia inolvidable. Puede escribirme por WhatsApp, agendar una videollamada o responder directamente a este correo.';
+        // === DETECTOR DE OUTPUT BASURA (asuntos prohibidos + clichés) ===
+        var ASUNTO_PROHIBIDO_RE = /^(?:RUBEN\s+COTON\s*[—-]\s*)?(?:Propuesta\s+profesional|Hola,?\s+soy|RUBEN\s+COTON\s+propone|Mi\s+propuesta|Una\s+propuesta\s+DJ)/i;
+        var CLICHE_RE = /\b(imagina\s+(?:tu|una|tus|un\s+)|imagina[,.]|experiencia\s+inolvidable|ambiente\s+(?:m[aá]gico|energ[eé]tico)|vibrar\s+al\s+son|hacer\s+realidad\s+esta\s+visi[oó]n|singularidad\s+cultural|garantizo\s+(?:un\s+)?(?:ambiente|el\s+[eé]xito)|mejor\s+m[uú]sica)\b/gi;
+
+        // Borrar clichés del intro/cuerpo/cta (sustitución por frase neutra concreta)
+        ['intro','cuerpo','cta'].forEach(function(k){
+          if (!textos[k]) return;
+          // Borrar oraciones enteras que contengan "Imagina una multitud..." y similares
+          textos[k] = textos[k].replace(/[^.!?]*\b(imagina\s+(?:una\s+multitud|tu\s+pr[oó]xima|tus\s+eventos|un\s+ambiente)|experiencia\s+inolvidable|vibrar\s+al\s+son|hacer\s+realidad\s+esta\s+visi[oó]n)[^.!?]*[.!?]/gi, '').trim();
+          textos[k] = textos[k].replace(CLICHE_RE, '').replace(/\s{2,}/g,' ').replace(/\s+([.,!?])/g,'$1').trim();
+        });
+
+        // Validar asunto: si está vacío, prohibido o muy corto → fallback ROTADO con nombre propio
+        var ASUNTOS_FALLBACK = [
+          'Lo que pasó en Pelahustán cuando pinché yo',
+          'Mi residencia mensual está en Palau Alameda',
+          'Llevo 15 años llenando salas. Ahora te escribo a ti',
+          'Un dato sobre las fiestas de Soto del Real',
+          'Mi mashup TWENTY suena en Cadena Dial',
+          '6 temporadas en Movistar Arena. Un paso más',
+          'No vengo a venderte nada. Solo a contarte algo',
+          'Una pregunta sobre el cartel de tus patronales',
+          'Lo que hago no se parece a otros DJs',
+          'Antes de cerrar el cartel, lee esto'
+        ];
+        if (!textos.asunto || textos.asunto.length < 8 || ASUNTO_PROHIBIDO_RE.test(textos.asunto) || CLICHE_RE.test(textos.asunto)) {
+          var idx = (Date.now() + (audiencia||'').length) % ASUNTOS_FALLBACK.length;
+          textos.asunto = ASUNTOS_FALLBACK[idx];
+          console.warn('[FALLBACK-ASUNTO] IA devolvió asunto inválido. Aplicado fallback rotado:', textos.asunto);
+        }
+
+        // Fallbacks intro/cuerpo/cta (sin clichés)
+        if (!textos.intro || textos.intro.length < 10) {
+          textos.intro = 'Soy RUBEN COTON. Llevo más de 15 años pinchando. Mi residencia mensual está en Palau Alameda (Valencia) y fui DJ oficial del Real Madrid Baloncesto durante 6 temporadas hasta marzo 2026.';
+        }
+        if (!textos.cuerpo || textos.cuerpo.length < 20) {
+          textos.cuerpo = 'He pinchado las fiestas patronales de Soto del Real, Villaconejos, Pelahustán, Chinchón y Coslada. He compartido escenario con Abel Ramos, DJ Neil, Sofía Cristo, DJ Marta, Mago de Oz y OBK. Mi mashup TWENTY suena en Cadena Dial.';
+        }
+        if (!textos.cta || textos.cta.length < 5) {
+          textos.cta = '¿Te paso mi biografía completa y enlaces a sesiones para que decidas con datos? Tienes mi WhatsApp en la firma o puedes responder a este mismo correo.';
+        }
 
         // Truncar asunto a 70 chars max
         if (textos.asunto.length > 70) textos.asunto = textos.asunto.substring(0, 67) + '...';
