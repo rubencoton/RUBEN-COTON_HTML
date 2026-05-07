@@ -37,6 +37,37 @@ function loadEnv() {
 loadEnv();
 
 const PORT = parseInt(process.env.PORT || '8090', 10);
+// Token simple para que el PC autentique el heartbeat (env opcional)
+const HEARTBEAT_TOKEN = process.env.HEARTBEAT_TOKEN || 'rc-pc-heartbeat-2026';
+// Persistencia base de conocimiento — fichero JSON
+let KB_STATE = { correcciones: [], reglas: [], pc_last_seen: 0 };
+const KB_FILE = path.join(__dirname, 'data', 'kb.json');
+function loadKB() {
+  try {
+    if (fs.existsSync(KB_FILE)) {
+      const raw = fs.readFileSync(KB_FILE, 'utf8');
+      const j = JSON.parse(raw);
+      if (j && typeof j === 'object') {
+        KB_STATE.correcciones = Array.isArray(j.correcciones) ? j.correcciones : [];
+        KB_STATE.reglas = Array.isArray(j.reglas) ? j.reglas : [];
+        KB_STATE.pc_last_seen = parseInt(j.pc_last_seen || 0, 10);
+        console.log('[KB] Cargado: ' + KB_STATE.correcciones.length + ' correcciones, ' + KB_STATE.reglas.length + ' reglas');
+      }
+    }
+  } catch (e) { console.log('[KB] Error cargando: ' + e.message); }
+}
+let kbSaveTimer = null;
+function saveKB() {
+  if (kbSaveTimer) clearTimeout(kbSaveTimer);
+  kbSaveTimer = setTimeout(() => {
+    try {
+      const dir = path.dirname(KB_FILE);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(KB_FILE, JSON.stringify(KB_STATE, null, 2), 'utf8');
+    } catch (e) { console.log('[KB] Error guardando: ' + e.message); }
+  }, 500);
+}
+loadKB();
 // Si APP_PASSWORD/AUTH_PASSWORD definido (modo VPS), escuchar en 0.0.0.0 con login bonito.
 // Si no (modo local PC), solo localhost sin auth.
 const APP_PASSWORD = process.env.APP_PASSWORD || process.env.AUTH_PASSWORD || '';
@@ -195,6 +226,41 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // === HEARTBEAT del PC (público pero con token) — el PC pinguea cada 30s ===
+  if (url.pathname === '/api/heartbeat' && req.method === 'POST') {
+    const chunks = []; let size = 0;
+    req.on('data', c => { size += c.length; if (size > 4096) req.destroy(); chunks.push(c); });
+    req.on('end', () => {
+      try {
+        const body = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
+        if (String(body.token || '') !== HEARTBEAT_TOKEN) {
+          res.writeHead(401, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ ok: false, error: 'token inválido' }));
+        }
+        KB_STATE.pc_last_seen = Date.now();
+        saveKB();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, ts: KB_STATE.pc_last_seen }));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'body inválido' }));
+      }
+    });
+    return;
+  }
+
+  // === Estado del PC (público — frontend lo pinguea para mostrar dot verde/rojo) ===
+  if (url.pathname === '/api/pc-status' && req.method === 'GET') {
+    const now = Date.now();
+    const lastSeen = KB_STATE.pc_last_seen || 0;
+    const ageSec = lastSeen ? Math.floor((now - lastSeen) / 1000) : null;
+    // Online si pingueó en los últimos 90 segundos
+    const online = lastSeen > 0 && (now - lastSeen) < 90000;
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, online, lastSeen, ageSec }));
+    return;
+  }
+
   // === AUTH endpoints (siempre públicos) ===
   if (url.pathname === '/api/auth/login' && req.method === 'POST') {
     const ip = getClientIp(req);
@@ -262,6 +328,133 @@ const server = http.createServer((req, res) => {
   // CORS: solo localhost permitido
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:' + PORT);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+
+  // === BASE DE CONOCIMIENTO IA (autenticada) ===
+  // GET /api/kb → todo el estado actual
+  if (url.pathname === '/api/kb' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      ok: true,
+      correcciones: KB_STATE.correcciones,
+      reglas: KB_STATE.reglas,
+      total_correcciones: KB_STATE.correcciones.length,
+      total_reglas: KB_STATE.reglas.length
+    }));
+  }
+  // POST /api/kb/correccion → añade una corrección
+  if (url.pathname === '/api/kb/correccion' && req.method === 'POST') {
+    const chunks = []; let size = 0;
+    req.on('data', c => { size += c.length; if (size > 256 * 1024) req.destroy(); chunks.push(c); });
+    req.on('end', () => {
+      try {
+        const c = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
+        if (!c.instruccion || !c.antes || !c.despues) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ ok: false, error: 'faltan campos' }));
+        }
+        KB_STATE.correcciones.push({
+          ts: Date.now(),
+          instruccion: String(c.instruccion).slice(0, 1000),
+          antes: c.antes, despues: c.despues,
+          audiencia: String(c.audiencia || '').slice(0, 200),
+          objetivo: String(c.objetivo || '').slice(0, 100)
+        });
+        if (KB_STATE.correcciones.length > 500) KB_STATE.correcciones = KB_STATE.correcciones.slice(-500);
+        saveKB();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, total: KB_STATE.correcciones.length }));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: e.message }));
+      }
+    });
+    return;
+  }
+  // PUT /api/kb/reglas → reemplaza reglas
+  if (url.pathname === '/api/kb/reglas' && (req.method === 'PUT' || req.method === 'POST')) {
+    const chunks = []; let size = 0;
+    req.on('data', c => { size += c.length; if (size > 64 * 1024) req.destroy(); chunks.push(c); });
+    req.on('end', () => {
+      try {
+        const b = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
+        if (!Array.isArray(b.reglas)) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ ok: false, error: 'reglas debe ser array' }));
+        }
+        KB_STATE.reglas = b.reglas
+          .map(s => String(s || '').trim())
+          .filter(s => s.length >= 5 && s.length <= 300)
+          .slice(0, 30);
+        saveKB();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, total: KB_STATE.reglas.length }));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: e.message }));
+      }
+    });
+    return;
+  }
+  // POST /api/kb/sync → fusiona correcciones y reglas que vienen del cliente con las del servidor
+  if (url.pathname === '/api/kb/sync' && req.method === 'POST') {
+    const chunks = []; let size = 0;
+    req.on('data', c => { size += c.length; if (size > 4 * 1024 * 1024) req.destroy(); chunks.push(c); });
+    req.on('end', () => {
+      try {
+        const b = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
+        const incoming = Array.isArray(b.correcciones) ? b.correcciones : [];
+        const reglasIn = Array.isArray(b.reglas) ? b.reglas : [];
+        // merge correcciones: deduplicar por ts+instruccion
+        const seen = new Set(KB_STATE.correcciones.map(c => (c.ts || 0) + '|' + (c.instruccion || '').slice(0, 60)));
+        let added = 0;
+        for (const c of incoming) {
+          const key = (c.ts || 0) + '|' + (c.instruccion || '').slice(0, 60);
+          if (!seen.has(key)) {
+            KB_STATE.correcciones.push(c);
+            seen.add(key);
+            added++;
+          }
+        }
+        // ordenar por ts y truncar
+        KB_STATE.correcciones.sort((a, b) => (a.ts || 0) - (b.ts || 0));
+        if (KB_STATE.correcciones.length > 500) KB_STATE.correcciones = KB_STATE.correcciones.slice(-500);
+        // reglas: si el cliente envía un set y el server está vacío, lo adopta. Si no, mantiene server.
+        if (reglasIn.length > 0 && KB_STATE.reglas.length === 0) {
+          KB_STATE.reglas = reglasIn.map(s => String(s).trim()).filter(s => s.length >= 5 && s.length <= 300).slice(0, 30);
+        }
+        saveKB();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          ok: true,
+          added,
+          total_correcciones: KB_STATE.correcciones.length,
+          total_reglas: KB_STATE.reglas.length,
+          correcciones: KB_STATE.correcciones,
+          reglas: KB_STATE.reglas
+        }));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: e.message }));
+      }
+    });
+    return;
+  }
+  // GET /api/kb/export → descarga JSON entero (para backup en PC)
+  if (url.pathname === '/api/kb/export' && req.method === 'GET') {
+    res.writeHead(200, {
+      'Content-Type': 'application/json',
+      'Content-Disposition': 'attachment; filename="rc-kb-' + new Date().toISOString().slice(0, 10) + '.json"'
+    });
+    return res.end(JSON.stringify(KB_STATE, null, 2));
+  }
+  // POST /api/kb/reset → borra todo (con confirmación)
+  if (url.pathname === '/api/kb/reset' && req.method === 'POST') {
+    KB_STATE.correcciones = [];
+    KB_STATE.reglas = [];
+    saveKB();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ ok: true }));
+  }
 
   // API: Get photo catalog (cache en memoria, no I/O disco en cada request)
   if (url.pathname === '/api/photos-catalog') {

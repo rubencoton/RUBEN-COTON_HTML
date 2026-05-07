@@ -470,6 +470,18 @@
       <div id="kbSidebarInfo" style="color:#cfe; font-size:11px;">—</div>
       <div style="color:#666; font-size:10px; margin-top:4px;">click para ver detalle ▸</div>
     </div>
+    <!-- Indicador estado PC (Ollama local) -->
+    <div id="pcStatusPanel" style="margin:10px 18px 0; padding:10px 12px; background:#1a1a1a; border:1px solid #333; border-radius:8px; font-size:12px; color:#aaa; line-height:1.5; display:flex; align-items:center; gap:10px;" title="Estado del PC personal con Ollama">
+      <span id="pcStatusDot" style="width:12px; height:12px; border-radius:50%; background:#666; flex-shrink:0; box-shadow:0 0 0 2px rgba(255,255,255,0.05); transition: background 0.3s, box-shadow 0.3s;"></span>
+      <div style="flex:1; min-width:0;">
+        <div style="font-weight:700; color:#fff; font-size:11px;">PC <span id="pcStatusText" style="color:#888; font-weight:500;">comprobando…</span></div>
+        <div id="pcStatusDetail" style="font-size:10px; color:#666;">IA local + heartbeat</div>
+      </div>
+    </div>
+    <!-- Botón Cerrar sesión (solo aparece si hay AUTH_PASSWORD activo en server) -->
+    <div id="logoutPanel" style="margin:10px 18px 14px; display:none;">
+      <button onclick="cerrarSesion()" style="width:100%; background:transparent; color:#aaa; border:1px solid #333; padding:8px 10px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:600; letter-spacing:0.5px; transition: all 0.15s;" onmouseover="this.style.borderColor='#ff6600'; this.style.color='#ff6600';" onmouseout="this.style.borderColor='#333'; this.style.color='#aaa';">⏏ CERRAR SESIÓN</button>
+    </div>
     <div class="sidebar-footer">
       RUBEN COTON &copy; 2026<br>
       Email Marketing Tool v1.0
@@ -775,6 +787,87 @@
         localStorage.setItem(KEY, c ? '1' : '0');
       });
     })();
+
+    // === CERRAR SESIÓN ===
+    async function cerrarSesion() {
+      if (!confirm('¿Cerrar sesión?')) return;
+      try {
+        await fetch('/api/auth/logout', { method:'POST' });
+      } catch (e) {}
+      window.location.href = '/login';
+    }
+
+    // === DETECTAR si app está protegida con login (para mostrar botón cerrar sesión) ===
+    (function(){
+      // Si el cookie session existe → modo VPS con auth → mostrar botón cerrar sesión
+      var hasAuth = document.cookie.indexOf('rc_html_session=') >= 0;
+      // O si NO estamos en localhost → asumir modo VPS público
+      var enVPS = !(location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+      if (hasAuth || enVPS) {
+        var p = document.getElementById('logoutPanel');
+        if (p) p.style.display = 'block';
+      }
+    })();
+
+    // === ESTADO DEL PC (Ollama local) ===
+    function actualizarPcStatus() {
+      var dot = document.getElementById('pcStatusDot');
+      var txt = document.getElementById('pcStatusText');
+      var det = document.getElementById('pcStatusDetail');
+      if (!dot || !txt) return;
+      // En localhost: asumir online (es el propio PC)
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        dot.style.background = '#22c55e';
+        dot.style.boxShadow = '0 0 0 2px rgba(34,197,94,0.25), 0 0 8px rgba(34,197,94,0.6)';
+        txt.textContent = 'ONLINE'; txt.style.color = '#22c55e';
+        det.textContent = 'IA local activa';
+        return;
+      }
+      // En VPS: pinguear /api/pc-status
+      fetch('/api/pc-status', { method:'GET' }).then(function(r){ return r.json(); }).then(function(d){
+        if (d && d.online) {
+          dot.style.background = '#22c55e';
+          dot.style.boxShadow = '0 0 0 2px rgba(34,197,94,0.25), 0 0 10px rgba(34,197,94,0.7)';
+          txt.textContent = 'ONLINE'; txt.style.color = '#22c55e';
+          det.textContent = 'IA local activa · hace ' + (d.ageSec||0) + 's';
+        } else {
+          dot.style.background = '#ef4444';
+          dot.style.boxShadow = '0 0 0 2px rgba(239,68,68,0.2)';
+          txt.textContent = 'OFFLINE'; txt.style.color = '#ef4444';
+          det.textContent = d.lastSeen ? 'IA solo Gemini · PC visto ' + Math.round(d.ageSec/60) + ' min' : 'PC nunca conectado';
+        }
+      }).catch(function(){
+        dot.style.background = '#666';
+        txt.textContent = 'desconocido'; txt.style.color = '#888';
+      });
+    }
+    setTimeout(actualizarPcStatus, 1000);
+    setInterval(actualizarPcStatus, 30000);
+
+    // === SYNC KB con backend (modo VPS) ===
+    async function syncKBConBackend() {
+      // Solo en VPS (localhost usa solo localStorage)
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+      try {
+        var localCorr = JSON.parse(localStorage.getItem('rc_correcciones') || '[]');
+        var localReglas = JSON.parse(localStorage.getItem('rc_reglas_aprendidas') || '[]');
+        var resp = await fetch('/api/kb/sync', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ correcciones: localCorr, reglas: localReglas })
+        });
+        var data = await resp.json();
+        if (data.ok) {
+          // Actualizar localStorage con el merge del servidor
+          if (Array.isArray(data.correcciones)) localStorage.setItem('rc_correcciones', JSON.stringify(data.correcciones));
+          if (Array.isArray(data.reglas)) localStorage.setItem('rc_reglas_aprendidas', JSON.stringify(data.reglas));
+          if (typeof actualizarPanelReglasAprendidas === 'function') actualizarPanelReglasAprendidas();
+          console.log('[KB-SYNC] OK · ' + data.total_correcciones + ' corr · ' + data.total_reglas + ' reglas · +' + data.added + ' subidas');
+        }
+      } catch (e) { console.warn('[KB-SYNC] error:', e); }
+    }
+    // Sync al cargar y cada 5 min
+    setTimeout(syncKBConBackend, 2000);
+    setInterval(syncKBConBackend, 300000);
 
     // === NAVEGACIÓN ENTRE VISTAS ===
     var VIEW_KEY = 'ui:lastView';
