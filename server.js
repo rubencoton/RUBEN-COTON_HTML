@@ -702,16 +702,17 @@ async function llmCascade(prompt, schema, opts) {
   // 2) Gemini
   if (process.env.GEMINI_API_KEY) {
     try {
-      console.log('[CASCADA] Probando Gemini (timeout 45s)...');
+      console.log('[CASCADA] Probando Gemini (timeout 120s, prompt=' + (prompt.length/1024).toFixed(1) + 'KB)...');
       const t0 = Date.now();
-      const r = await callGemini(prompt, schema, 45000);
+      const r = await callGemini(prompt, schema, 120000);
       if (r && r.json) {
         console.log('[CASCADA] OK Gemini en ' + (Date.now() - t0) + 'ms');
         return { ok: true, source: 'gemini', json: r.json, raw: r.raw };
       }
-      errors.push('gemini: respuesta vacía');
+      console.log('[CASCADA] Gemini respuesta vacía. raw=' + JSON.stringify((r && r.raw || '').slice(0, 200)));
+      errors.push('gemini: respuesta vacía o JSON inválido');
     } catch (e) {
-      console.log('[CASCADA] Gemini falló: ' + e.message);
+      console.log('[CASCADA] Gemini falló: ' + (e.message || e) + ' | stack=' + String(e.stack||'').slice(0,300));
       errors.push('gemini: ' + e.message);
     }
   } else {
