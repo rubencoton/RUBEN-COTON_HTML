@@ -11,6 +11,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { exec, spawn } = require('child_process');
 
 // Cargar .env
@@ -36,11 +37,14 @@ function loadEnv() {
 loadEnv();
 
 const PORT = parseInt(process.env.PORT || '8090', 10);
-// Si AUTH_PASSWORD definido (modo VPS), escuchar en 0.0.0.0 (público) con auth.
-// Si no (modo local PC), solo localhost.
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD || '';
-const AUTH_USER = process.env.AUTH_USER || 'ruben';
-const HOST = AUTH_PASSWORD ? '0.0.0.0' : '127.0.0.1';
+// Si APP_PASSWORD/AUTH_PASSWORD definido (modo VPS), escuchar en 0.0.0.0 con login bonito.
+// Si no (modo local PC), solo localhost sin auth.
+const APP_PASSWORD = process.env.APP_PASSWORD || process.env.AUTH_PASSWORD || '';
+const AUTH_SECRET = process.env.AUTH_SECRET || crypto.createHash('sha256').update('rc-html-builder-secret-' + APP_PASSWORD).digest('hex');
+const AUTH_COOKIE = 'rc_html_session';
+const HOST = APP_PASSWORD ? '0.0.0.0' : '127.0.0.1';
+// Token cookie precomputado (constant-time-safe)
+const EXPECTED_TOKEN = APP_PASSWORD ? crypto.createHash('sha256').update(APP_PASSWORD + ':' + AUTH_SECRET).digest('hex') : '';
 const BASE = path.resolve(__dirname);
 const CATALOG_FILE = path.join(BASE, 'config', 'photos-catalog.json');
 const SYNC_SCRIPT = path.join(BASE, 'scripts', 'drive-sync.py');
@@ -120,39 +124,139 @@ function isHealthCheck(pathname) {
   return pathname === '/health' || pathname === '/api/health';
 }
 
-// BasicAuth — solo activo si AUTH_PASSWORD env var existe
-function checkBasicAuth(req, res) {
-  if (!AUTH_PASSWORD) return true; // modo local, sin auth
-  if (isHealthCheck(new URL(req.url, 'http://x').pathname)) return true;
-  const h = req.headers['authorization'] || '';
-  if (h.startsWith('Basic ')) {
-    try {
-      const decoded = Buffer.from(h.slice(6), 'base64').toString('utf8');
-      const i = decoded.indexOf(':');
-      const u = decoded.slice(0, i);
-      const p = decoded.slice(i + 1);
-      if (u === AUTH_USER && p === AUTH_PASSWORD) return true;
-    } catch (e) {}
-  }
-  res.writeHead(401, {
-    'WWW-Authenticate': 'Basic realm="RUBEN COTON Email Builder", charset="UTF-8"',
-    'Content-Type': 'text/plain; charset=utf-8'
-  });
-  res.end('Acceso restringido. Introduce las credenciales.');
+// Parse cookies del header
+function parseCookies(h) {
+  if (!h) return {};
+  return h.split(';').reduce((acc, p) => {
+    const i = p.indexOf('='); if (i < 0) return acc;
+    const k = p.slice(0, i).trim(); const v = p.slice(i + 1).trim();
+    try { acc[k] = decodeURIComponent(v); } catch { acc[k] = v; }
+    return acc;
+  }, {});
+}
+
+// Constant-time check del token de sesión
+function safeTokenEqual(provided) {
+  try {
+    const a = Buffer.from(String(provided || ''), 'hex');
+    const b = Buffer.from(EXPECTED_TOKEN, 'hex');
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
+  } catch { return false; }
+}
+
+function isAuthenticated(req) {
+  if (!APP_PASSWORD) return true; // modo local sin auth
+  const cookies = parseCookies(req.headers.cookie || '');
+  return safeTokenEqual(cookies[AUTH_COOKIE]);
+}
+
+// Rutas públicas (sin auth requerida)
+const PUBLIC_PATHS = new Set(['/login', '/login.html', '/login.js', '/login.css', '/api/auth/login', '/api/auth/logout']);
+function isPublicPath(pathname) {
+  if (isHealthCheck(pathname)) return true;
+  if (PUBLIC_PATHS.has(pathname)) return true;
+  if (pathname.startsWith('/assets/')) return true;
   return false;
 }
 
-const server = http.createServer((req, res) => {
-  // BasicAuth gate (si está habilitado)
-  if (!checkBasicAuth(req, res)) return;
+// Detectar si viene por HTTPS (para Secure cookie)
+function isHttps(req) {
+  if (req.socket && req.socket.encrypted) return true;
+  const xfp = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
+  return xfp === 'https';
+}
 
+// Rate limit login en memoria (5 intentos / 5 min por IP)
+const LOGIN_MAX = 5;
+const LOGIN_WINDOW_MS = 5 * 60 * 1000;
+const loginAttempts = new Map();
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, attempts] of loginAttempts.entries()) {
+    const recent = attempts.filter(t => now - t < LOGIN_WINDOW_MS);
+    if (recent.length === 0) loginAttempts.delete(ip);
+    else if (recent.length !== attempts.length) loginAttempts.set(ip, recent);
+  }
+}, LOGIN_WINDOW_MS).unref();
+
+function getClientIp(req) {
+  const xff = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  return xff || req.socket?.remoteAddress || 'unknown';
+}
+
+const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${HOST}:${PORT}`);
 
-  // Health endpoint
+  // Health endpoint público
   if (isHealthCheck(url.pathname)) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true, ts: Date.now() }));
     return;
+  }
+
+  // === AUTH endpoints (siempre públicos) ===
+  if (url.pathname === '/api/auth/login' && req.method === 'POST') {
+    const ip = getClientIp(req);
+    const now = Date.now();
+    const attempts = (loginAttempts.get(ip) || []).filter(t => now - t < LOGIN_WINDOW_MS);
+    if (attempts.length >= LOGIN_MAX) {
+      res.writeHead(429, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ ok: false, error: 'Demasiados intentos. Espera 5 minutos.' }));
+    }
+    const chunks = []; let size = 0;
+    req.on('data', c => { size += c.length; if (size > 4096) req.destroy(); chunks.push(c); });
+    req.on('end', () => {
+      try {
+        const body = JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
+        const pw = String(body.password || '');
+        if (pw !== APP_PASSWORD) {
+          attempts.push(now); loginAttempts.set(ip, attempts);
+          res.writeHead(401, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ ok: false, error: 'Contraseña incorrecta' }));
+        }
+        loginAttempts.delete(ip);
+        const cookieParts = [
+          `${AUTH_COOKIE}=${encodeURIComponent(EXPECTED_TOKEN)}`,
+          'Path=/', 'HttpOnly', 'SameSite=Lax', 'Max-Age=2592000'
+        ];
+        if (isHttps(req)) cookieParts.push('Secure');
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Set-Cookie': cookieParts.join('; ') });
+        res.end(JSON.stringify({ ok: true }));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'Body inválido' }));
+      }
+    });
+    return;
+  }
+  if (url.pathname === '/api/auth/logout' && req.method === 'POST') {
+    const cookieParts = [`${AUTH_COOKIE}=`, 'Path=/', 'HttpOnly', 'SameSite=Lax', 'Max-Age=0'];
+    if (isHttps(req)) cookieParts.push('Secure');
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Set-Cookie': cookieParts.join('; ') });
+    return res.end(JSON.stringify({ ok: true }));
+  }
+
+  // /login → siempre sirve la página HTML de login (sin importar si está logueado)
+  if (url.pathname === '/login') {
+    fs.readFile(path.join(BASE, 'login.html'), (err, data) => {
+      if (err) { res.writeHead(404); return res.end('Login page missing'); }
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // === Auth gate ===
+  if (APP_PASSWORD && !isPublicPath(url.pathname) && !isAuthenticated(req)) {
+    // Si es API → 401 JSON. Si es navegación → redirect a /login.
+    const accept = String(req.headers['accept'] || '');
+    if (url.pathname.startsWith('/api/') || !accept.includes('text/html')) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ ok: false, error: 'No autenticado' }));
+    }
+    res.writeHead(302, { Location: '/login' });
+    return res.end();
   }
 
   // CORS: solo localhost permitido
