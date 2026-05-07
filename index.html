@@ -533,11 +533,33 @@
 
     <!-- VISTA: MODO LIBRE — Chat IA universal (cualquier tarea, sin sesgo de marca) -->
     <div class="content view-libre" id="viewLibre" style="display:none;">
+      <!-- Botón flotante "Refinar selección" (aparece al seleccionar texto en respuesta IA) -->
+      <button id="libreRefinarFloat" style="display:none; position:fixed; z-index:999; background:var(--naranja); color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.25); letter-spacing:0.3px;">✎ REFINAR SELECCIÓN</button>
+      <!-- Modal de refinamiento -->
+      <div id="libreRefinarModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:14px; max-width:560px; width:92%; padding:24px; box-shadow:0 30px 60px rgba(0,0,0,0.4); border-top:4px solid var(--naranja);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <h2 style="margin:0; font-size:18px; font-weight:800;">✎ Refinar selección con IA</h2>
+            <button onclick="libreRefinarCerrar()" style="background:transparent; border:none; font-size:22px; cursor:pointer; color:#666; padding:0 6px;">×</button>
+          </div>
+          <div style="font-size:11px; color:var(--gris-texto); font-weight:700; letter-spacing:0.5px; margin-bottom:6px;">TEXTO SELECCIONADO</div>
+          <div id="libreRefinarTextoOrig" style="background:#f7f7f7; border-radius:8px; padding:10px 12px; font-size:13px; color:#222; max-height:140px; overflow-y:auto; white-space:pre-wrap; margin-bottom:14px; border-left:3px solid var(--naranja);"></div>
+          <div style="font-size:11px; color:var(--gris-texto); font-weight:700; letter-spacing:0.5px; margin-bottom:6px;">¿QUÉ QUIERES CAMBIAR?</div>
+          <textarea id="libreRefinarPrompt" placeholder="Ej: hazlo más corto, traducelo a inglés, dale tono más profesional, simplifica…" style="width:100%; min-height:80px; padding:10px 12px; border:1px solid var(--gris-borde); border-radius:8px; font-size:14px; font-family:inherit; resize:vertical;" autofocus></textarea>
+          <div style="display:flex; gap:10px; margin-top:14px; justify-content:flex-end;">
+            <button onclick="libreRefinarCerrar()" style="background:#fff; border:1px solid var(--gris-borde); color:#666; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600;">Cancelar</button>
+            <button id="libreRefinarBtn" onclick="libreRefinarAplicar()" style="background:var(--naranja); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:700; cursor:pointer;">APLICAR</button>
+          </div>
+          <div id="libreRefinarEstado" style="margin-top:10px; font-size:12px; color:#666;"></div>
+        </div>
+      </div>
+
       <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:14px;">
         <div class="card" style="padding:18px;">
           <div class="card-title" style="margin-bottom:8px;"><span class="step">✎</span> MODO LIBRE — IA UNIVERSAL</div>
           <p class="hint" style="margin:0; color:var(--gris-texto);">
-            Chat IA local sin sesgo de marca. Pídele lo que quieras: redactar, resumir, traducir, generar HTML, código, ideas, listas, planes, lo que sea. Mantiene el contexto de la conversación. Tu PC, tu IA.
+            Chat IA local sin sesgo de marca. Pídele lo que quieras: redactar, resumir, traducir, generar HTML, código, ideas, listas, planes, lo que sea.<br>
+            <b style="color:var(--naranja);">Tip:</b> selecciona cualquier trozo de una respuesta IA y aparecerá el botón <b>"✎ REFINAR SELECCIÓN"</b> para cambiar SOLO ese trozo con un prompt.
           </p>
         </div>
         <div class="card" style="padding:0; flex:1; display:flex; flex-direction:column; min-height:560px;">
@@ -992,7 +1014,136 @@
       if (inp) inp.addEventListener('keydown', function(e){
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); libreEnviar(); }
       });
+      // Listener selección texto en historial libre
+      var hist = document.getElementById('libreHistorial');
+      if (hist) {
+        hist.addEventListener('mouseup', libreCheckSeleccion);
+        hist.addEventListener('keyup', libreCheckSeleccion);
+      }
+      document.addEventListener('mousedown', function(ev){
+        var f = document.getElementById('libreRefinarFloat');
+        if (f && ev.target !== f) {
+          // Si el click es fuera del botón flotante y la selección desapareció, ocultar
+          setTimeout(function(){
+            var sel = window.getSelection();
+            if (!sel || sel.toString().trim().length === 0) {
+              f.style.display = 'none';
+              window._libreSeleccionActual = null;
+            }
+          }, 100);
+        }
+      });
     });
+
+    // === REFINAR SELECCIÓN (modo libre) ===
+    window._libreSeleccionActual = null;
+
+    function libreCheckSeleccion() {
+      var sel = window.getSelection();
+      var txt = sel ? sel.toString().trim() : '';
+      var floatBtn = document.getElementById('libreRefinarFloat');
+      if (!floatBtn) return;
+      if (!txt || txt.length < 3) { floatBtn.style.display = 'none'; window._libreSeleccionActual = null; return; }
+      // Verificar que la selección está dentro de un mensaje de la IA (no del usuario)
+      var range = sel.getRangeAt(0);
+      var node = range.commonAncestorContainer;
+      while (node && node.nodeType !== 1) node = node.parentNode;
+      if (!node) { floatBtn.style.display = 'none'; return; }
+      var hist = document.getElementById('libreHistorial');
+      if (!hist || !hist.contains(node)) { floatBtn.style.display = 'none'; return; }
+      // Buscar el div de mensaje (los mensajes IA tienen background #f0f7ff o similar)
+      var msgDiv = node.closest('div[style*="border-left"]');
+      if (!msgDiv) { floatBtn.style.display = 'none'; return; }
+      // Solo permitir refinar respuestas IA, no mensajes de usuario
+      var headerB = msgDiv.querySelector('div');
+      if (headerB && headerB.textContent && headerB.textContent.indexOf('TÚ') === 0) {
+        floatBtn.style.display = 'none';
+        return;
+      }
+      // Posicionar botón flotante junto a la selección
+      var rect = range.getBoundingClientRect();
+      floatBtn.style.display = 'block';
+      floatBtn.style.left = Math.max(10, rect.left + rect.width / 2 - 90) + 'px';
+      floatBtn.style.top = Math.max(10, rect.top - 42) + 'px';
+      // Guardar selección
+      window._libreSeleccionActual = {
+        texto: txt,
+        nodo: msgDiv.querySelector('div:nth-child(2)') // body del mensaje (nuevo: índice 2)
+      };
+      // Si el setup del DOM cambia, intentar fallback
+      if (!window._libreSeleccionActual.nodo) {
+        var divs = msgDiv.querySelectorAll('div');
+        if (divs.length >= 2) window._libreSeleccionActual.nodo = divs[1];
+      }
+      floatBtn.onclick = libreRefinarAbrir;
+    }
+
+    function libreRefinarAbrir() {
+      if (!window._libreSeleccionActual || !window._libreSeleccionActual.texto) return;
+      var modal = document.getElementById('libreRefinarModal');
+      var orig = document.getElementById('libreRefinarTextoOrig');
+      var promptIn = document.getElementById('libreRefinarPrompt');
+      var estado = document.getElementById('libreRefinarEstado');
+      var floatBtn = document.getElementById('libreRefinarFloat');
+      orig.textContent = window._libreSeleccionActual.texto;
+      promptIn.value = '';
+      estado.textContent = '';
+      modal.style.display = 'flex';
+      floatBtn.style.display = 'none';
+      setTimeout(function(){ promptIn.focus(); }, 50);
+    }
+    function libreRefinarCerrar() {
+      var modal = document.getElementById('libreRefinarModal');
+      if (modal) modal.style.display = 'none';
+    }
+    async function libreRefinarAplicar() {
+      var promptIn = document.getElementById('libreRefinarPrompt');
+      var estado = document.getElementById('libreRefinarEstado');
+      var btn = document.getElementById('libreRefinarBtn');
+      var raw = (promptIn.value || '').trim();
+      if (!raw) { alert('Escribe qué quieres cambiar.'); return; }
+      if (!window._libreSeleccionActual) { alert('No hay selección.'); return; }
+      var instruccion = (typeof sanitizarInputUsuario === 'function') ? sanitizarInputUsuario(raw, 1000) : raw.slice(0, 1000);
+      var sel = window._libreSeleccionActual;
+      btn.disabled = true; btn.textContent = '...';
+      estado.style.color = '#666'; estado.textContent = 'Aplicando IA...';
+      try {
+        var ctl = new AbortController();
+        var to = setTimeout(function(){ ctl.abort(); }, 90000);
+        var resp = await fetch('/api/refinar-bloque', {
+          method:'POST', headers:{'Content-Type':'application/json'}, signal: ctl.signal,
+          body: JSON.stringify({
+            bloque: 'libre',
+            textoOriginal: sel.texto,
+            instruccion: instruccion,
+            reglasAprendidas: []  // sin reglas de marca en modo libre
+          })
+        });
+        clearTimeout(to);
+        var data = await resp.json();
+        if (!data.ok) throw new Error(data.error || 'IA falló');
+        var nuevo = (data.nuevoTexto || '').trim();
+        if (!nuevo) throw new Error('Texto vacío');
+        // Reemplazar en el nodo del mensaje
+        if (sel.nodo) {
+          var antes = sel.nodo.textContent;
+          if (antes.indexOf(sel.texto) >= 0) {
+            sel.nodo.textContent = antes.replace(sel.texto, nuevo);
+          } else {
+            // Fallback: añadir como nuevo mensaje IA
+            libreAddMsg('assistant', '↳ ' + nuevo, { source: data.source + ' (refinado)' });
+          }
+        } else {
+          libreAddMsg('assistant', '↳ ' + nuevo, { source: data.source + ' (refinado)' });
+        }
+        estado.style.color = '#16a34a'; estado.textContent = '✓ Aplicado';
+        setTimeout(libreRefinarCerrar, 600);
+      } catch (e) {
+        estado.style.color = '#dc2626'; estado.textContent = '⚠ ' + e.message;
+      } finally {
+        btn.disabled = false; btn.textContent = 'APLICAR';
+      }
+    }
 
     window.addEventListener('message', function(ev){
       if (!ev.data || ev.data.type !== 'rc-select') return;
